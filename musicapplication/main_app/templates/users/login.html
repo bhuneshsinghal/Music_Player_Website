@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignIn Page</title>
+</head>
+<body>
+    <h3>Welcome to MusicBoss, Sign IN To Listen Music</h3>
+    <form action="{% url 'user_login' %}" method="post">
+    {% csrf_token %} 
+
+        <label for="">email</label>
+        <input type="email" id="email" name="email" placeholder="Enter Email ID" required>
+        <br>
+
+        <label for="">password</label>
+        <input type="password" id="password" name="password" placeholder="Enter Your Password" required>
+        <br>
+
+        <button type="submit">Sign In</button>
+        
+    </form>
+</body>
+</html>
