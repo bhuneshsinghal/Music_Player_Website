@@ -1,4 +1,3 @@
-import re
 from rest_framework.views import APIView
 from .models import CustomUser
 from .serializers import UserSerializer,RegisterSerializer
@@ -36,7 +35,7 @@ class logoutUser(APIView):
         user = request.user.email
         if user is not None:
             logout(request)
-            return Response("{} has been logged out".format(user))
+            return render(request,'users/logout.html')
 
 
 
@@ -74,10 +73,6 @@ class RegisterUser(APIView):
             return Response({
                 "message":"Details are not provided"
             })
-        # serializer = RegisterSerializer(data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        # serializer.save(user=request.user)
-        # return Response(status=status.HTTP_201_CREATED)
 
 class ChangePassword(APIView):
     def get(self,request,*args,**kwargs):

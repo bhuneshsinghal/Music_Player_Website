@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from users import views
 from . import views as mainview
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',mainview.HomePage.as_view(),name='homepage'),
@@ -27,3 +29,6 @@ urlpatterns = [
     path('user/login/',views.LoginUser.as_view(),name='user_login'),
     path('user/logout/',views.logoutUser.as_view(),name='user_logout'),
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
