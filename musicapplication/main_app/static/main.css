@@ -17,7 +17,18 @@
     background-color: #ecf0f3;
     color: #a0a5a8;
   }
+
+  h2 {
+    color: black;
+    font-size: 4rem;
+  }
   
+  #sign_button{
+    text-decoration: none;
+    color: white;
+  }
+
+
   /**/
   .main {
     position: relative;

@@ -1,0 +1,20 @@
+body {
+    background: #222d32;
+    font-family: "Roboto", sans-serif;
+  }
+  
+  .login-box {
+    margin-top: 200px;
+    margin-left: 600px;
+    margin-right: 600px;
+    padding-top: 70px;
+    height: 400px;
+    background: #1a2226;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
+
+  h2{
+    text-align: center;
+    font-size: 3.5rem;
+ }

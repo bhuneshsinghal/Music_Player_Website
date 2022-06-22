@@ -28,6 +28,9 @@ urlpatterns = [
     path('user/change_password/',views.ChangePassword.as_view(),name='change_password'),
     path('user/login/',views.LoginUser.as_view(),name='user_login'),
     path('user/logout/',views.logoutUser.as_view(),name='user_logout'),
+    path('user/verify/<auth_token>',views.success,name="success"),
+    path('user/verify/',views.verify,name="verify"),
+    path('user/error',views.error,name="error"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

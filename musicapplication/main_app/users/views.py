@@ -1,11 +1,25 @@
+from logging import exception
+import uuid
 from rest_framework.views import APIView
 from .models import CustomUser
 from .serializers import UserSerializer,RegisterSerializer
 from rest_framework.response import Response
 from django.contrib.auth import authenticate,login,logout
 from rest_framework import status
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from users.helpers import send_mail,send_verify_email
 # Create your views here.
+
+def success(request):
+    return render(request, 'users/success.html')
+
+def error(request):
+    return render(request,"users/error.html")
+
+def verify(request):
+    return render(request,"users/token_send.html")
+
 class UserView(APIView):
 
     def get(self, request, pk = None ,*args,**kwargs):
@@ -26,9 +40,16 @@ class LoginUser(APIView):
     def post(self,request,*args,**kwargs):
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(email=email,password=password)
-        login(request,user)
-        return Response("{} successfully logged in".format(user.email))
+        try:
+            if CustomUser.objects.filter(email=email).first():
+                user = authenticate(email=email,password=password)
+                if user.is_verified:
+                    login(request,user)
+                    return redirect("user/success/")
+                else:
+                    return redirect("user/login/")
+        except Exception as e:
+            print(e)
 
 class logoutUser(APIView):
     def get(self,request,*args,**kwargs):
@@ -44,35 +65,44 @@ class RegisterUser(APIView):
         return render(request,'users/signup.html')
 
     def post(self,request,*args,**kwargs):
-        user_data = request.POST
-        if user_data.get('password') is not None and user_data.get('confirm_password') is not None:
-            
-            if user_data.get('password') == user_data.get('confirm_password'):
+        user_data = request.POST 
+        try:
+            email = user_data.get('email')
+            if CustomUser.objects.filter(email=email).first():
+                messages.success(request,"Given email id is already in use")
+                return redirect('/user/register')
+            if user_data.get('password') is not None and user_data.get('confirm_password') is not None:
                 
-                user = CustomUser.objects.create_user(
-                    email = user_data.get('email'),
-                    password = user_data.get('password')
-                )
+                if user_data.get('password') == user_data.get('confirm_password'):
+                    
+                    user = CustomUser.objects.create_user(
+                        email = user_data.get('email'),
+                        password = user_data.get('password')
+                    )
+                    
+                    if user_data.get('first_name') is not None:
+                        user.first_name = user_data.get('first_name')
+                    
+                    if user_data.get('last_name') is not None:
+                        user.last_name = user_data.get('last_name')
+                    
+                    if "date_of_birth" in user_data:
+                        user.date_of_birth = user_data.get('date_of_birth')
+                    
+                    user.set_password(user_data.get('password'))
+                    user.auth_token = str(uuid.uuid4())
+                    user.save()
+                    send_verify_email(user,user.auth_token)
+                    return redirect("/user/verify/")
                 
-                if user_data.get('first_name') is not None:
-                    user.first_name = user_data.get('first_name')
-                
-                if user_data.get('last_name') is not None:
-                    user.last_name = user_data.get('last_name')
-                
-                if "date_of_birth" in user_data:
-                    user.date_of_birth = user_data.get('date_of_birth')
-                
-                user.set_password(user_data.get('password'))
-                user.save()
-                return render(request,'users/login.html')
-            
+                else:
+                    messages.success(request,"Given passwords are not matching.")
+                    return redirect("/user/register/")
             else:
-                return Response({"message":"password is not matching","status":status.HTTP_406_NOT_ACCEPTABLE})
-        else:
-            return Response({
-                "message":"Details are not provided"
-            })
+                messages.success(request,"Please provide details before clicking signup")
+                return redirect("/user/register/")
+        except Exception as e:
+            print(e)
 
 class ChangePassword(APIView):
     def get(self,request,*args,**kwargs):

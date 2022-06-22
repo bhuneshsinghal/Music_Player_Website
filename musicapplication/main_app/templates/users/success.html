@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'success.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <h2 style="color:aliceblue">
+        Welcome To The Boss OF All Music Platform <i>MUSICBOSS</i>
+    </h2>
+    <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-2"></div>
+          <div class="col-lg-6 col-md-8 login-box">
+              <div class="col-lg-12 login-title">
+                <h3>Email verified Successfully</h3>
+              </div>
+              <div id="but">
+                <button><a href="{% url 'user_login' %}">SIGN IN</a></button>
+              </div>
+        </div>
+</body>
+</html>

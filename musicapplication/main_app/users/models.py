@@ -12,6 +12,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50,null=True,blank=True,verbose_name="Last Name")
     date_of_birth = models.DateField(null=True,blank=True,verbose_name="Birth Date")
     gender = models.CharField(max_length=20,choices=genderchoice.choose,default='Male',verbose_name='Gender')
+    auth_token = models.CharField(max_length=200,null=True,blank=True)
+    is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now,verbose_name="Joining Date")
