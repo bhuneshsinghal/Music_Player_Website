@@ -8,10 +8,11 @@ from django.contrib.auth import authenticate,login,logout
 from rest_framework import status
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from users.helpers import send_mail,send_verify_email
+from users.helpers import verify_token,send_verify_email
 # Create your views here.
 
-def success(request):
+def success(request,auth_token):
+    verify_token(auth_token)
     return render(request, 'users/success.html')
 
 def error(request):
@@ -45,11 +46,12 @@ class LoginUser(APIView):
                 user = authenticate(email=email,password=password)
                 if user.is_verified:
                     login(request,user)
-                    return redirect("user/success/")
+                    return redirect("/")
                 else:
-                    return redirect("user/login/")
+                    return render(request,"users/token_send.html")
         except Exception as e:
             print(e)
+            return redirect("/")
 
 class logoutUser(APIView):
     def get(self,request,*args,**kwargs):
@@ -91,10 +93,10 @@ class RegisterUser(APIView):
                     
                     user.set_password(user_data.get('password'))
                     user.auth_token = str(uuid.uuid4())
+                    auth_token = str(user.auth_token)
                     user.save()
-                    send_verify_email(user,user.auth_token)
-                    return redirect("/user/verify/")
-                
+                    send_verify_email(user,auth_token)
+                    return render(request,"users/token_send.html")
                 else:
                     messages.success(request,"Given passwords are not matching.")
                     return redirect("/user/register/")
@@ -103,6 +105,7 @@ class RegisterUser(APIView):
                 return redirect("/user/register/")
         except Exception as e:
             print(e)
+            return redirect("/")
 
 class ChangePassword(APIView):
     def get(self,request,*args,**kwargs):
