@@ -8,11 +8,14 @@ from django.contrib.auth import authenticate,login,logout
 from rest_framework import status
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from users.helpers import verify_token,send_verify_email
+
 # Create your views here.
 
-def success(request,auth_token):
-    verify_token(auth_token)
+def success(request,verify_token):
+    verify_token(verify_token)
     return render(request, 'users/success.html')
 
 def error(request):
@@ -22,7 +25,8 @@ def verify(request):
     return render(request,"users/token_send.html")
 
 class UserView(APIView):
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk = None ,*args,**kwargs):
         if pk==None:
             users = CustomUser.objects.all()
@@ -92,10 +96,10 @@ class RegisterUser(APIView):
                         user.date_of_birth = user_data.get('date_of_birth')
                     
                     user.set_password(user_data.get('password'))
-                    user.auth_token = str(uuid.uuid4())
-                    auth_token = str(user.auth_token)
+                    user.verify_token = str(uuid.uuid4())
+                    verify_token = str(user.verify_token)
                     user.save()
-                    send_verify_email(user,auth_token)
+                    send_verify_email(user,verify_token)
                     return render(request,"users/token_send.html")
                 else:
                     messages.success(request,"Given passwords are not matching.")

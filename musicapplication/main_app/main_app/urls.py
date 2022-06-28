@@ -19,6 +19,7 @@ from users import views
 from . import views as mainview
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.authtoken import views as v
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',mainview.HomePage.as_view(),name='homepage'),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('user/success/<auth_token>',views.success,name="success"),
     path('user/verify/',views.verify,name="verify"),
     path('user/error',views.error,name="error"),
+    path('api-token-auth/',v.obtain_auth_token,name="token_generate_url"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
