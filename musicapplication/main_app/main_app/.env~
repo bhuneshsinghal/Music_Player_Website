@@ -1,0 +1,9 @@
+SECRET_KEY=django-insecure-3=176$!xvi**w*e&ds%$k3#t%6c^_m^ec=t72f2hnzk3s@8t$%
+DEBUG=True
+DB_NAME=music_player
+DB_USER=root
+DB_PASSWORD=B9810751894s
+PORT=3306
+EMAIL_HOST_USER=bhunesh17225@iiitd.ac.in
+EMAIL_HOST_PASSWORD=B981@751894S
+GITPAT=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
