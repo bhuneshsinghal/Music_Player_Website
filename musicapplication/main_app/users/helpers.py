@@ -6,7 +6,7 @@ from users.models import CustomUser
 
 def send_verify_email(user,auth_token):
     subject = "Your Music Boss Account needs verification."
-    message = "Hi, {} please click on this link to verify your account. http://127.0.0.1:8000/user/success/{}".format(user.email,auth_token)
+    message = "Hi, {} please click on this link to verify your account. http://100.24.20.241/:8000/user/success/{}".format(user.email,auth_token)
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [user.email]
     send_mail( subject, message, email_from, recipient_list )
